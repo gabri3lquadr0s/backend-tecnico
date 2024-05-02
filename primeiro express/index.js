@@ -5,8 +5,8 @@ const app = express();
 app.use(bodyParser.json());
 
 
-var data = [{"isbn": "123456789", "title": "alcorão 2 a vingança", "author": "allah da silva", "year": "2000"},
-            {"isbn": "123546789", "title": "biblia 2 o inimigo agora é outro", "author": "jesus 'nego' silva", "year": "1969"}]
+var data = [{"isbn": "123456789", "title": "o caminho", "author": "joão da silva", "year": "2000"},
+            {"isbn": "123546789", "title": "codigo main", "author": "arthur cucker", "year": "1969"}]
 
 
 /*  ====GET====  */
@@ -48,7 +48,7 @@ app.get('/getBooksByYear/:year', (req, res) => {
 })
 
 app.get('/getBooksByAuthor/:author', (req, res) => {
-    const { title } = req.params;
+    const { author } = req.params;
     let books = []; 
     for(let i = 0; i < data.length; i++) {
         if(data[i].author == author) books.push(data[i]);
