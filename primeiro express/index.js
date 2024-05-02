@@ -18,9 +18,9 @@ app.get('/getBookByIsbn/:isbn', (req, res) => {
     const { isbn } = req.params;
     const book = data.find(b => b.isbn === isbn);
     if(book) {
-        res.json(book);
+        return res.json(book);
     } else {
-        res.status(404).json({"message": "Book not found, please check the ISBN"});
+        return res.status(404).json({"message": "Book not found, please check the ISBN"});
     }
 })
 
@@ -28,9 +28,9 @@ app.get('/getBookByTitle/:title', (req, res) => {
     const { title } = req.params;
     const book = data.find(b => b.title === title);
     if(book) {
-        res.json(book);
+        return res.json(book);
     } else {
-        res.status(404).json({"message": "Book not found, please check if the title is correct"});
+        return res.status(404).json({"message": "Book not found, please check if the title is correct"});
     }
 })
 
@@ -41,9 +41,9 @@ app.get('/getBooksByYear/:year', (req, res) => {
         if(data[i].year == year) books.push(data[i]);
     }
     if(books != []) {
-        res.json(books);
+        return res.json(books);
     } else {
-        res.status(404).json({"message": "Not found any books from this year"});
+        return res.status(404).json({"message": "Not found any books from this year"});
     }
 })
 
@@ -54,9 +54,9 @@ app.get('/getBooksByAuthor/:author', (req, res) => {
         if(data[i].author == author) books.push(data[i]);
     }
     if(books != []) {
-        res.json(books);
+        return res.json(books);
     } else {
-        res.status(404).json({"message": "Book not found! Please check if the title is correct."});
+        return res.status(404).json({"message": "Book not found! Please check if the title is correct."});
     }
 })
 /*  ===========  */
@@ -66,11 +66,16 @@ app.get('/getBooksByAuthor/:author', (req, res) => {
 app.post('/registerBook', (req, res) => {
     const { isbn, title, author, year } = req.body;
     if (!isbn || !title || !author || !year) {
-        res.status(400).json({ message: 'Error! Missing parameter.' });    
+        return res.status(400).json({ message: 'Error! Missing parameter.' });    
+    }
+    for(let i = 0; i < data.length; i++) {
+        if(data[i].isbn == isbn) {
+            return res.status(400).json({ message: 'Error! Book already exists.' });
+        }
     }
     const newBook = { isbn, title, author, year }; 
     data.push(newBook); 
-    res.status(201).json({ message: 'Book registered!' }); 
+    return res.status(201).json({ message: 'Book registered!' }); 
 })
 /*  ===========  */
 
@@ -84,9 +89,9 @@ app.put("/editBook/:isbn", (req, res) => {
         choosenBook.title = title || choosenBook.title; 
         choosenBook.author = author || choosenBook.author; 
         choosenBook.year = year || choosenBook.year; 
-        res.json({ message: `Book ${isbn} edited with success` });
+        return res.json({ message: `Book ${isbn} edited with success!` });
     } else {
-        res.status(404).json({ message: 'Book not found! Please check the ISBN.' }); 
+        return res.status(404).json({ message: 'Book not found! Please check the ISBN.' }); 
     } 
 })
 /*  ===========  */
@@ -98,9 +103,9 @@ app.delete('/deleteBook/:isbn', (req, res) => {
     const bookIndex = data.findIndex(b => b.isbn === isbn); 
     if (bookIndex !== -1) { 
         data.splice(bookIndex, 1); 
-        res.json({ message: `Book ${isbn} deleted with success!` }); 
+        return res.json({ message: `Book ${isbn} deleted with success!` }); 
     } else { 
-        res.status(404).json({ message: 'Book not found! Please check the ISBN.' }); 
+        return res.status(404).json({ message: 'Book not found! Please check the ISBN.' }); 
     } 
 });
 /*  ===========  */
